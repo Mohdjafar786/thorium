@@ -1,7 +1,5 @@
-
-function welcome()
+function welcome(message)
 {
-    console.log('I am Mohd jafar and a part of FunctionUp Thorium cohort.')
-
+    console.log(mesage)
 }
 module.exports.welcome=welcome
