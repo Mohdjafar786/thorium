@@ -1,12 +1,25 @@
-const authenticate = function(req, req, next) {
-    //check the token in request header
-    //validate this token
+const { route } = require("../routes/route");
+const jwt = require("jsonwebtoken");
 
-    next()
-}
+let authenticate = function (req, res, next) {
+  let token = req.headers["x-auth-token"]; //expecting a header token in postman body.
+  if (!token) return res.send({ status: false, msg: "token must be present" });
+  next();
+};
 
+let authorise= function (req, res, next) {
+  let token = req.headers["x-auth-token"];
+  let decodedToken = jwt.verify(token, "functionup-thorium");
+  let userToBeModified = req.params.userId;
+  let userLoggedIn = decodedToken.userId;
+  if (userToBeModified != userLoggedIn)
+    return res.send({
+      status: false,
+      msg: "User logged is not allowed to modify the requested users data",
+    });
 
-const authorise = function(req, res, next) {
-    // comapre the logged in user's id and the id in request
-    next()
-}
+  next();
+};
+
+module.exports.authenticate= authenticate;
+module.exports.authorise = authorise;
