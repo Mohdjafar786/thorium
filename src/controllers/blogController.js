@@ -71,7 +71,7 @@ const getblog = async function (req, res) {
         const data = req.query
 
 
-        const blogs = await blogModel.find({ data, isPublished: true, deleted: false }).populate("authorid")
+        const blogs = await blogModel.find(data).find({ isPublished: true, deleted: false }).populate("authorid")
         if (blogs.length == 0) return res.status(404).send({ status: false, msg: "No blogs Available." })
         res.status(200).send({ status: true, data: blogs });
     }
@@ -134,12 +134,11 @@ const deleteblog = async function (req, res) {
 
 
 const deleteByElement = async function (req, res) {
-
     try {
         const data = req.query
-        if (Object.keys(data) == 0) return res.status(400).send({ status: false, msg: "not a vaild input" })
-        const deleteBYquery = await blogModel.find(data).updateMany({ deleted: true, deletedAt: new Date() }, { new: true })
-        if (!deleteBYquery) return res.status(404).send({ status: false, msg: "blog not exist" })
+        if (Object.keys(data) == 0) return res.status(400).send({ status: false, msg: "no input found" })
+        const deleteBYquery = await blogModel.updateMany(data, { isDeleted: true, deletedAt: new Date() }, { new: true })
+        if (!deleteBYquery) return res.status(404).send({ status: false, msg: "blog doesn't exist" })
         res.status(200).send({ status: true, msg: deleteBYquery })
     }
 
@@ -148,6 +147,23 @@ const deleteByElement = async function (req, res) {
         res.status(500).send({ status: false, msg: error.message });
     }
 };
+
+
+
+
+//     try {
+//         const data = req.query
+//         if (Object.keys(data) == 0) return res.status(400).send({ status: false, msg: "not a vaild input" })
+//         const deleteBYquery = await blogModel.find(data).updateMany({ deleted: true, deletedAt: new Date() }, { new: true })
+//         if (!deleteBYquery) return res.status(404).send({ status: false, msg: "blog not exist" })
+//         res.status(200).send({ status: true, msg: deleteBYquery })
+//     }
+
+
+//     catch (error) {
+//         res.status(500).send({ status: false, msg: error.message });
+//     }
+// };
 
 
 

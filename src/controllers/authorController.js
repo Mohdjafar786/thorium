@@ -18,6 +18,7 @@ const isValid= function(value){
 const createAuthor= async function (req, res) {
     let author = req.body
 
+  
     const{firstName,lastName,title,email,password}= author
 
     const req0 = isValid(firstName)
@@ -29,11 +30,14 @@ const createAuthor= async function (req, res) {
     const req2 = isValid(title)
     if (!req2) return res.status(400).send('title is required')
 
-    const req3 = isValid(email)
+     const req3 = isValid(email)
     if (!req3) return res.status(400).send('email is required')
 
     const req4 = isValid(password)
     if (!req4) return res.status(400).send('password is required')
+
+
+ 
 
     let authorCreated = await AuthorModel.create(author)
     res.status(201).send({data: authorCreated})
